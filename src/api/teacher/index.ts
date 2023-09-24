@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/teacher`,
+    require('./teacherCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/teacher/:id`,
+    require('./teacherUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/teacher/import`,
+    require('./teacherImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/teacher`,
+    require('./teacherDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/teacher/autocomplete`,
+    require('./teacherAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/teacher`,
+    require('./teacherList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/teacher/:id`,
+    require('./teacherFind').default,
+  );
+};

@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/conversation-participant`,
+    require('./conversationParticipantCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/conversation-participant/:id`,
+    require('./conversationParticipantUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/conversation-participant/import`,
+    require('./conversationParticipantImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/conversation-participant`,
+    require('./conversationParticipantDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/conversation-participant/autocomplete`,
+    require('./conversationParticipantAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/conversation-participant`,
+    require('./conversationParticipantList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/conversation-participant/:id`,
+    require('./conversationParticipantFind').default,
+  );
+};

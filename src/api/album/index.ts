@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/album`,
+    require('./albumCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/album/:id`,
+    require('./albumUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/album/import`,
+    require('./albumImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/album`,
+    require('./albumDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/album/autocomplete`,
+    require('./albumAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/album`,
+    require('./albumList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/album/:id`,
+    require('./albumFind').default,
+  );
+};

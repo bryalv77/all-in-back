@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/availability-timeslot`,
+    require('./availabilityTimeslotCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/availability-timeslot/:id`,
+    require('./availabilityTimeslotUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/availability-timeslot/import`,
+    require('./availabilityTimeslotImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/availability-timeslot`,
+    require('./availabilityTimeslotDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/availability-timeslot/autocomplete`,
+    require('./availabilityTimeslotAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/availability-timeslot`,
+    require('./availabilityTimeslotList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/availability-timeslot/:id`,
+    require('./availabilityTimeslotFind').default,
+  );
+};

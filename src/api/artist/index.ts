@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/artist`,
+    require('./artistCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/artist/:id`,
+    require('./artistUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/artist/import`,
+    require('./artistImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/artist`,
+    require('./artistDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/artist/autocomplete`,
+    require('./artistAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/artist`,
+    require('./artistList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/artist/:id`,
+    require('./artistFind').default,
+  );
+};

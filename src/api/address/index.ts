@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/address`,
+    require('./addressCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/address/:id`,
+    require('./addressUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/address/import`,
+    require('./addressImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/address`,
+    require('./addressDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/address/autocomplete`,
+    require('./addressAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/address`,
+    require('./addressList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/address/:id`,
+    require('./addressFind').default,
+  );
+};

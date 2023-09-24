@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/bank`,
+    require('./bankCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/bank/:id`,
+    require('./bankUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/bank/import`,
+    require('./bankImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/bank`,
+    require('./bankDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/bank/autocomplete`,
+    require('./bankAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/bank`,
+    require('./bankList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/bank/:id`,
+    require('./bankFind').default,
+  );
+};

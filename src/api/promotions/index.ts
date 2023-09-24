@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/promotions`,
+    require('./promotionsCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/promotions/:id`,
+    require('./promotionsUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/promotions/import`,
+    require('./promotionsImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/promotions`,
+    require('./promotionsDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/promotions/autocomplete`,
+    require('./promotionsAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/promotions`,
+    require('./promotionsList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/promotions/:id`,
+    require('./promotionsFind').default,
+  );
+};

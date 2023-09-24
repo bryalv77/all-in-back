@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/task-tags`,
+    require('./taskTagsCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/task-tags/:id`,
+    require('./taskTagsUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/task-tags/import`,
+    require('./taskTagsImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/task-tags`,
+    require('./taskTagsDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/task-tags/autocomplete`,
+    require('./taskTagsAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/task-tags`,
+    require('./taskTagsList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/task-tags/:id`,
+    require('./taskTagsFind').default,
+  );
+};

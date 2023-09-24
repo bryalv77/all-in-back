@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/sub-tasks`,
+    require('./subTasksCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/sub-tasks/:id`,
+    require('./subTasksUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/sub-tasks/import`,
+    require('./subTasksImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/sub-tasks`,
+    require('./subTasksDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/sub-tasks/autocomplete`,
+    require('./subTasksAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/sub-tasks`,
+    require('./subTasksList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/sub-tasks/:id`,
+    require('./subTasksFind').default,
+  );
+};

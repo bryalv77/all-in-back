@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/course-progress`,
+    require('./courseProgressCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/course-progress/:id`,
+    require('./courseProgressUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/course-progress/import`,
+    require('./courseProgressImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/course-progress`,
+    require('./courseProgressDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/course-progress/autocomplete`,
+    require('./courseProgressAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/course-progress`,
+    require('./courseProgressList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/course-progress/:id`,
+    require('./courseProgressFind').default,
+  );
+};

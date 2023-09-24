@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/like`,
+    require('./likeCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/like/:id`,
+    require('./likeUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/like/import`,
+    require('./likeImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/like`,
+    require('./likeDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/like/autocomplete`,
+    require('./likeAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/like`,
+    require('./likeList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/like/:id`,
+    require('./likeFind').default,
+  );
+};

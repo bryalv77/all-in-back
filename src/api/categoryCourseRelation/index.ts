@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/category-course-relation`,
+    require('./categoryCourseRelationCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/category-course-relation/:id`,
+    require('./categoryCourseRelationUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/category-course-relation/import`,
+    require('./categoryCourseRelationImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/category-course-relation`,
+    require('./categoryCourseRelationDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/category-course-relation/autocomplete`,
+    require('./categoryCourseRelationAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/category-course-relation`,
+    require('./categoryCourseRelationList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/category-course-relation/:id`,
+    require('./categoryCourseRelationFind').default,
+  );
+};

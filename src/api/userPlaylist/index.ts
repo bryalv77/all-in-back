@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/user-playlist`,
+    require('./userPlaylistCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/user-playlist/:id`,
+    require('./userPlaylistUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/user-playlist/import`,
+    require('./userPlaylistImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/user-playlist`,
+    require('./userPlaylistDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/user-playlist/autocomplete`,
+    require('./userPlaylistAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/user-playlist`,
+    require('./userPlaylistList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/user-playlist/:id`,
+    require('./userPlaylistFind').default,
+  );
+};

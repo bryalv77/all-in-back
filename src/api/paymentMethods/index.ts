@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/payment-methods`,
+    require('./paymentMethodsCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/payment-methods/:id`,
+    require('./paymentMethodsUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/payment-methods/import`,
+    require('./paymentMethodsImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/payment-methods`,
+    require('./paymentMethodsDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/payment-methods/autocomplete`,
+    require('./paymentMethodsAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/payment-methods`,
+    require('./paymentMethodsList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/payment-methods/:id`,
+    require('./paymentMethodsFind').default,
+  );
+};

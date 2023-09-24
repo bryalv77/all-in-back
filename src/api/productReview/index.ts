@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/product-review`,
+    require('./productReviewCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/product-review/:id`,
+    require('./productReviewUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/product-review/import`,
+    require('./productReviewImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/product-review`,
+    require('./productReviewDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/product-review/autocomplete`,
+    require('./productReviewAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/product-review`,
+    require('./productReviewList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/product-review/:id`,
+    require('./productReviewFind').default,
+  );
+};

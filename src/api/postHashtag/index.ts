@@ -1,0 +1,30 @@
+export default (app) => {
+  app.post(
+    `/tenant/:tenantId/post-hashtag`,
+    require('./postHashtagCreate').default,
+  );
+  app.put(
+    `/tenant/:tenantId/post-hashtag/:id`,
+    require('./postHashtagUpdate').default,
+  );
+  app.post(
+    `/tenant/:tenantId/post-hashtag/import`,
+    require('./postHashtagImport').default,
+  );
+  app.delete(
+    `/tenant/:tenantId/post-hashtag`,
+    require('./postHashtagDestroy').default,
+  );
+  app.get(
+    `/tenant/:tenantId/post-hashtag/autocomplete`,
+    require('./postHashtagAutocomplete').default,
+  );
+  app.get(
+    `/tenant/:tenantId/post-hashtag`,
+    require('./postHashtagList').default,
+  );
+  app.get(
+    `/tenant/:tenantId/post-hashtag/:id`,
+    require('./postHashtagFind').default,
+  );
+};
