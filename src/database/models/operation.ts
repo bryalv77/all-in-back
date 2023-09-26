@@ -1,4 +1,5 @@
-import { DataTypes } from 'sequelize';import moment from 'moment';
+import { DataTypes } from 'sequelize';
+import moment from 'moment';
 
 export default function (sequelize) {
   const operation = sequelize.define(
@@ -10,7 +11,7 @@ export default function (sequelize) {
         primaryKey: true,
       },
       fintonicId: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING(255),
       },
       description: {
         type: DataTypes.TEXT,
@@ -29,7 +30,7 @@ export default function (sequelize) {
       },
       valueDate: {
         type: DataTypes.DATEONLY,
-        get: function() {
+        get: function () {
           // @ts-ignore
           return this.getDataValue('valueDate')
             ? moment
@@ -41,7 +42,7 @@ export default function (sequelize) {
       },
       operationDate: {
         type: DataTypes.DATEONLY,
-        get: function() {
+        get: function () {
           // @ts-ignore
           return this.getDataValue('operationDate')
             ? moment
@@ -65,10 +66,10 @@ export default function (sequelize) {
       },
       importHash: {
         type: DataTypes.STRING(255),
-        allowNull: true,    
+        allowNull: true,
         validate: {
           len: [0, 255],
-        },    
+        },
       },
     },
     {
@@ -118,7 +119,7 @@ export default function (sequelize) {
         belongsToColumn: 'receipt',
       },
     });
-    
+
     models.operation.belongsTo(models.tenant, {
       as: 'tenant',
       foreignKey: {

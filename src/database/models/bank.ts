@@ -10,17 +10,17 @@ export default function (sequelize) {
         primaryKey: true,
       },
       fintonicId: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING(255),
       },
       name: {
         type: DataTypes.TEXT,
       },
       importHash: {
         type: DataTypes.STRING(255),
-        allowNull: true,    
+        allowNull: true,
         validate: {
           len: [0, 255],
-        },    
+        },
       },
     },
     {
@@ -32,7 +32,6 @@ export default function (sequelize) {
             deletedAt: null,
           },
         },
-
       ],
       timestamps: true,
       paranoid: true,
@@ -40,8 +39,6 @@ export default function (sequelize) {
   );
 
   bank.associate = (models) => {
-
-
     models.bank.hasMany(models.file, {
       as: 'logo',
       foreignKey: 'belongsToId',
@@ -51,7 +48,7 @@ export default function (sequelize) {
         belongsToColumn: 'logo',
       },
     });
-    
+
     models.bank.belongsTo(models.tenant, {
       as: 'tenant',
       foreignKey: {
