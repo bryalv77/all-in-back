@@ -19,6 +19,7 @@ function models() {
     getConfig().DATABASE_PASSWORD,
     {
       host: getConfig().DATABASE_HOST,
+      port: getConfig().DATABASE_PORT,
       dialect: getConfig().DATABASE_DIALECT,
       logging:
         getConfig().DATABASE_LOGGING === 'true'
@@ -43,7 +44,10 @@ function models() {
       );
     })
     .forEach(function (file) {
-      const model = require(path.join(__dirname, file)).default(sequelize, DataTypes);
+      const model = require(path.join(
+        __dirname,
+        file,
+      )).default(sequelize, DataTypes);
       database[model.name] = model;
     });
 
