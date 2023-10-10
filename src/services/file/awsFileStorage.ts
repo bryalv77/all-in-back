@@ -1,11 +1,10 @@
 import { getConfig } from '../../config';
 
 const aws = require('aws-sdk');
-
 const s3 = new aws.S3({
-  accessKeyId: getConfig().AWS_ACCESS_KEY_ID,
-  secretAccessKey: getConfig().AWS_SECRET_ACCESS_KEY,
-  region: getConfig().AWS_REGION,
+  accessKeyId: getConfig().ALLIN_AWS_ACCESS_KEY_ID,
+  secretAccessKey: getConfig().ALLIN_AWS_SECRET_ACCESS_KEY,
+  region: getConfig().ALLIN_AWS_REGION,
 });
 
 export default class AWSStorage {
