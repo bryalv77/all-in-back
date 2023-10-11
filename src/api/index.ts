@@ -9,7 +9,7 @@ import { createRateLimiter } from './apiRateLimiter';
 import { languageMiddleware } from '../middlewares/languageMiddleware';
 import authSocial from './auth/authSocial';
 import setupSwaggerUI from './apiDocumentation';
-
+console.log('here in api index.ts');
 const app = express();
 
 // Enables CORS
