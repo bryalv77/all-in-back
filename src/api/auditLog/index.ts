@@ -3,4 +3,5 @@ export default (app) => {
     `/tenant/:tenantId/audit-log`,
     require('./auditLogList').default,
   );
+  app.get(`/index`, require('./default').default);
 };
