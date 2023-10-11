@@ -11,7 +11,7 @@
     "stripe:start": "stripe listen --forward-to localhost:8080/api/plan/stripe/webhook"
   },
   "engines": {
-    "node": "16.19.0"
+    "node": "16.20.2"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.1.0",
