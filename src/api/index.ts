@@ -14,18 +14,22 @@ const app = express();
 
 // Enables CORS
 app.use(cors({ origin: true }));
-
+console.log('Enable cors');
 // Initializes and adds the database middleware.
+console.log('databaseMiddleware');
 app.use(databaseMiddleware);
 
 // Sets the current language of the request
+console.log('languageMiddleware');
 app.use(languageMiddleware);
 
 // Configures the authentication middleware
 // to set the currentUser to the requests
+console.log('authMiddleware');
 app.use(authMiddleware);
 
 // Setup the Documentation
+console.log('setupSwaggerUI');
 setupSwaggerUI(app);
 
 // Default rate limiter
@@ -38,10 +42,12 @@ app.use(defaultRateLimiter);
 
 // Enables Helmet, a set of tools to
 // increase security.
+console.log('helmet');
 app.use(helmet());
 
 // Parses the body of POST/PUT request
 // to JSON
+console.log('body parser');
 app.use(
   bodyParser.json({
     verify: function (req, res, buf) {
@@ -54,13 +60,15 @@ app.use(
     },
   }),
 );
+console.log('routes');
 
 // Configure the Entity routes
 const routes = express.Router();
 
 // Enable Passport for Social Sign-in
+console.log('passport for social sign in');
 authSocial(app, routes);
-
+console.log('requiring routes');
 require('./auditLog').default(routes);
 require('./auth').default(routes);
 require('./plan').default(routes);
@@ -119,11 +127,13 @@ require('./availabilityTimeslot').default(routes);
 require('./appointment').default(routes);
 require('./brand').default(routes);
 require('./deliveryMethod').default(routes);
-
+console.log('required all the routes');
 // Loads the Tenant if the :tenantId param is passed
+console.log('tenantMiddleware');
 routes.param('tenantId', tenantMiddleware);
 
 // Add the routes to the /api endpoint
+console.log('add api routes');
 app.use('/api', routes);
-
+console.log('export app');
 export default app;
