@@ -10,8 +10,9 @@ import { languageMiddleware } from '../middlewares/languageMiddleware';
 import authSocial from './auth/authSocial';
 import setupSwaggerUI from './apiDocumentation';
 console.log('here in api index.ts');
+console.log('creating app');
 const app = express();
-
+console.log('created app');
 // Enables CORS
 app.use(cors({ origin: true }));
 console.log('Enable cors');
