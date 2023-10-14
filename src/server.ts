@@ -20,6 +20,9 @@ console.log('here in api index.ts');
 console.log('creating app');
 const app = express();
 console.log('created app');
+const server = app.listen(PORT);
+server.timeout = 120000;
+console.log('servertimeout: ', server);
 // Enables CORS
 app.use(cors({ origin: true }));
 console.log('Enable cors');
@@ -111,7 +114,6 @@ const modules = [
   'subTasks',
   'media',
   'posts',
-  'followers',
   'like',
   'hashtag',
   'postHashtag',
@@ -149,6 +151,7 @@ const modules = [
   'appointment',
   'brand',
   'deliveryMethod',
+  'followers',
 ];
 Promise.all(
   modules.map((moduleName) => loadModule(moduleName)),
