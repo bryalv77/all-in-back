@@ -20,9 +20,6 @@ console.log('here in api index.ts');
 console.log('creating app');
 const app = express();
 console.log('created app');
-const server = app.listen(PORT);
-server.timeout = 120000;
-console.log('servertimeout: ', server);
 // Enables CORS
 app.use(cors({ origin: true }));
 console.log('Enable cors');
@@ -166,9 +163,11 @@ Promise.all(
     app.use('/api', routes);
     console.log('export app');
     // Resto de la configuración de tu aplicación Express
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`Listening on ${PORT}`);
     });
+    server.timeout = 1000 * 60 * 10; // 10 minutes
+    console.log('server.timeout: ', server.timeout);
   })
   .catch((error) => {
     console.error('Error al cargar módulos:', error);
