@@ -1,35 +1,25 @@
-import SequelizeRepository from '../../database/repositories/sequelizeRepository';
-import AuditLogRepository from '../../database/repositories/auditLogRepository';
-import lodash from 'lodash';
-import SequelizeFilterUtils from '../../database/utils/sequelizeFilterUtils';
-import Error404 from '../../errors/Error404';
-import Sequelize from 'sequelize';import FileRepository from './fileRepository';
-import { IRepositoryOptions } from './IRepositoryOptions';
+import SequelizeRepository from "../../database/repositories/sequelizeRepository";
+import AuditLogRepository from "../../database/repositories/auditLogRepository";
+import lodash from "lodash";
+import SequelizeFilterUtils from "../../database/utils/sequelizeFilterUtils";
+import Error404 from "../../errors/Error404";
+import Sequelize from "sequelize";
+import FileRepository from "./fileRepository";
+import { IRepositoryOptions } from "./IRepositoryOptions";
 
 const Op = Sequelize.Op;
 
 class BankRepository {
-
   static async create(data, options: IRepositoryOptions) {
-    const currentUser = SequelizeRepository.getCurrentUser(
-      options,
-    );
+    const currentUser = SequelizeRepository.getCurrentUser(options);
 
-    const tenant = SequelizeRepository.getCurrentTenant(
-      options,
-    );
+    const tenant = SequelizeRepository.getCurrentTenant(options);
 
-    const transaction = SequelizeRepository.getTransaction(
-      options,
-    );
+    const transaction = SequelizeRepository.getTransaction(options);
 
     const record = await options.database.bank.create(
       {
-        ...lodash.pick(data, [
-          'fintonicId',
-          'name',          
-          'importHash',
-        ]),
+        ...lodash.pick(data, ["fintonicId", "name", "importHash"]),
 
         tenantId: tenant.id,
         createdById: currentUser.id,
@@ -37,54 +27,43 @@ class BankRepository {
       },
       {
         transaction,
-      },
+      }
     );
 
-    
-  
     await FileRepository.replaceRelationFiles(
       {
         belongsTo: options.database.bank.getTableName(),
-        belongsToColumn: 'logo',
+        belongsToColumn: "logo",
         belongsToId: record.id,
       },
       data.logo,
-      options,
+      options
     );
-  
+
     await this._createAuditLog(
       AuditLogRepository.CREATE,
       record,
       data,
-      options,
+      options
     );
 
     return this.findById(record.id, options);
   }
 
   static async update(id, data, options: IRepositoryOptions) {
-    const currentUser = SequelizeRepository.getCurrentUser(
-      options,
-    );
+    const currentUser = SequelizeRepository.getCurrentUser(options);
 
-    const transaction = SequelizeRepository.getTransaction(
-      options,
-    );
+    const transaction = SequelizeRepository.getTransaction(options);
 
+    const currentTenant = SequelizeRepository.getCurrentTenant(options);
 
-    const currentTenant = SequelizeRepository.getCurrentTenant(
-      options,
-    );
-
-    let record = await options.database.bank.findOne(      
-      {
-        where: {
-          id,
-          tenantId: currentTenant.id,
-        },
-        transaction,
+    let record = await options.database.bank.findOne({
+      where: {
+        id,
+        tenantId: currentTenant.id,
       },
-    );
+      transaction,
+    });
 
     if (!record) {
       throw new Error404();
@@ -92,59 +71,47 @@ class BankRepository {
 
     record = await record.update(
       {
-        ...lodash.pick(data, [
-          'fintonicId',
-          'name',          
-          'importHash',
-        ]),
+        ...lodash.pick(data, ["fintonicId", "name", "importHash"]),
 
         updatedById: currentUser.id,
       },
       {
         transaction,
-      },
+      }
     );
-
-
 
     await FileRepository.replaceRelationFiles(
       {
         belongsTo: options.database.bank.getTableName(),
-        belongsToColumn: 'logo',
+        belongsToColumn: "logo",
         belongsToId: record.id,
       },
       data.logo,
-      options,
+      options
     );
 
     await this._createAuditLog(
       AuditLogRepository.UPDATE,
       record,
       data,
-      options,
+      options
     );
 
     return this.findById(record.id, options);
   }
 
   static async destroy(id, options: IRepositoryOptions) {
-    const transaction = SequelizeRepository.getTransaction(
-      options,
-    );
+    const transaction = SequelizeRepository.getTransaction(options);
 
-    const currentTenant = SequelizeRepository.getCurrentTenant(
-      options,
-    );
+    const currentTenant = SequelizeRepository.getCurrentTenant(options);
 
-    let record = await options.database.bank.findOne(
-      {
-        where: {
-          id,
-          tenantId: currentTenant.id,
-        },
-        transaction,
+    let record = await options.database.bank.findOne({
+      where: {
+        id,
+        tenantId: currentTenant.id,
       },
-    );
+      transaction,
+    });
 
     if (!record) {
       throw new Error404();
@@ -158,33 +125,25 @@ class BankRepository {
       AuditLogRepository.DELETE,
       record,
       record,
-      options,
+      options
     );
   }
 
   static async findById(id, options: IRepositoryOptions) {
-    const transaction = SequelizeRepository.getTransaction(
-      options,
-    );
+    const transaction = SequelizeRepository.getTransaction(options);
 
-    const include = [
+    const include = [];
 
-    ];
+    const currentTenant = SequelizeRepository.getCurrentTenant(options);
 
-    const currentTenant = SequelizeRepository.getCurrentTenant(
-      options,
-    );
-
-    const record = await options.database.bank.findOne(
-      {
-        where: {
-          id,
-          tenantId: currentTenant.id,
-        },
-        include,
-        transaction,
+    const record = await options.database.bank.findOne({
+      where: {
+        id,
+        tenantId: currentTenant.id,
       },
-    );
+      include,
+      transaction,
+    });
 
     if (!record) {
       throw new Error404();
@@ -193,27 +152,39 @@ class BankRepository {
     return this._fillWithRelationsAndFiles(record, options);
   }
 
-  static async filterIdInTenant(
-    id,
-    options: IRepositoryOptions,
-  ) {
-    return lodash.get(
-      await this.filterIdsInTenant([id], options),
-      '[0]',
-      null,
-    );
+  static async findByFintonicId(fintonicId, options: IRepositoryOptions) {
+    const transaction = SequelizeRepository.getTransaction(options);
+
+    const include = [];
+
+    const currentTenant = SequelizeRepository.getCurrentTenant(options);
+
+    const record = await options.database.bank.findOne({
+      where: {
+        fintonicId,
+        tenantId: currentTenant.id,
+      },
+      include,
+      transaction,
+    });
+
+    if (!record) {
+      throw new Error404();
+    }
+
+    return this._fillWithRelationsAndFiles(record, options);
   }
 
-  static async filterIdsInTenant(
-    ids,
-    options: IRepositoryOptions,
-  ) {
+  static async filterIdInTenant(id, options: IRepositoryOptions) {
+    return lodash.get(await this.filterIdsInTenant([id], options), "[0]", null);
+  }
+
+  static async filterIdsInTenant(ids, options: IRepositoryOptions) {
     if (!ids || !ids.length) {
       return [];
     }
 
-    const currentTenant =
-      SequelizeRepository.getCurrentTenant(options);
+    const currentTenant = SequelizeRepository.getCurrentTenant(options);
 
     const where = {
       id: {
@@ -222,48 +193,36 @@ class BankRepository {
       tenantId: currentTenant.id,
     };
 
-    const records = await options.database.bank.findAll(
-      {
-        attributes: ['id'],
-        where,
-      },
-    );
+    const records = await options.database.bank.findAll({
+      attributes: ["id"],
+      where,
+    });
 
     return records.map((record) => record.id);
   }
 
   static async count(filter, options: IRepositoryOptions) {
-    const transaction = SequelizeRepository.getTransaction(
-      options,
-    );
+    const transaction = SequelizeRepository.getTransaction(options);
 
-    const tenant = SequelizeRepository.getCurrentTenant(
-      options,
-    );
+    const tenant = SequelizeRepository.getCurrentTenant(options);
 
-    return options.database.bank.count(
-      {
-        where: {
-          ...filter,
-          tenantId: tenant.id,
-        },
-        transaction,
+    return options.database.bank.count({
+      where: {
+        ...filter,
+        tenantId: tenant.id,
       },
-    );
+      transaction,
+    });
   }
 
   static async findAndCountAll(
-    { filter, limit = 0, offset = 0, orderBy = '' },
-    options: IRepositoryOptions,
+    { filter, limit = 0, offset = 0, orderBy = "" },
+    options: IRepositoryOptions
   ) {
-    const tenant = SequelizeRepository.getCurrentTenant(
-      options,
-    );
+    const tenant = SequelizeRepository.getCurrentTenant(options);
 
     let whereAnd: Array<any> = [];
-    let include = [
-      
-    ];
+    let include = [];
 
     whereAnd.push({
       tenantId: tenant.id,
@@ -272,52 +231,40 @@ class BankRepository {
     if (filter) {
       if (filter.id) {
         whereAnd.push({
-          ['id']: SequelizeFilterUtils.uuid(filter.id),
+          ["id"]: SequelizeFilterUtils.uuid(filter.id),
         });
       }
 
       if (filter.fintonicId) {
         whereAnd.push(
           SequelizeFilterUtils.ilikeIncludes(
-            'bank',
-            'fintonicId',
-            filter.fintonicId,
-          ),
+            "bank",
+            "fintonicId",
+            filter.fintonicId
+          )
         );
       }
 
       if (filter.name) {
         whereAnd.push(
-          SequelizeFilterUtils.ilikeIncludes(
-            'bank',
-            'name',
-            filter.name,
-          ),
+          SequelizeFilterUtils.ilikeIncludes("bank", "name", filter.name)
         );
       }
 
       if (filter.createdAtRange) {
         const [start, end] = filter.createdAtRange;
 
-        if (
-          start !== undefined &&
-          start !== null &&
-          start !== ''
-        ) {
+        if (start !== undefined && start !== null && start !== "") {
           whereAnd.push({
-            ['createdAt']: {
+            ["createdAt"]: {
               [Op.gte]: start,
             },
           });
         }
 
-        if (
-          end !== undefined &&
-          end !== null &&
-          end !== ''
-        ) {
+        if (end !== undefined && end !== null && end !== "") {
           whereAnd.push({
-            ['createdAt']: {
+            ["createdAt"]: {
               [Op.lte]: end,
             },
           });
@@ -327,49 +274,35 @@ class BankRepository {
 
     const where = { [Op.and]: whereAnd };
 
-    let {
-      rows,
-      count,
-    } = await options.database.bank.findAndCountAll({
+    let { rows, count } = await options.database.bank.findAndCountAll({
       where,
       include,
       limit: limit ? Number(limit) : undefined,
       offset: offset ? Number(offset) : undefined,
-      order: orderBy
-        ? [orderBy.split('_')]
-        : [['createdAt', 'DESC']],
-      transaction: SequelizeRepository.getTransaction(
-        options,
-      ),
+      order: orderBy ? [orderBy.split("_")] : [["createdAt", "DESC"]],
+      transaction: SequelizeRepository.getTransaction(options),
     });
 
-    rows = await this._fillWithRelationsAndFilesForRows(
-      rows,
-      options,
-    );
+    rows = await this._fillWithRelationsAndFilesForRows(rows, options);
 
     return { rows, count };
   }
 
   static async findAllAutocomplete(query, limit, options: IRepositoryOptions) {
-    const tenant = SequelizeRepository.getCurrentTenant(
-      options,
-    );
+    const tenant = SequelizeRepository.getCurrentTenant(options);
 
-    let whereAnd: Array<any> = [{
-      tenantId: tenant.id,
-    }];
+    let whereAnd: Array<any> = [
+      {
+        tenantId: tenant.id,
+      },
+    ];
 
     if (query) {
       whereAnd.push({
         [Op.or]: [
-          { ['id']: SequelizeFilterUtils.uuid(query) },
+          { ["id"]: SequelizeFilterUtils.uuid(query) },
           {
-            [Op.and]: SequelizeFilterUtils.ilikeIncludes(
-              'bank',
-              'name',
-              query,
-            ),
+            [Op.and]: SequelizeFilterUtils.ilikeIncludes("bank", "name", query),
           },
         ],
       });
@@ -377,14 +310,12 @@ class BankRepository {
 
     const where = { [Op.and]: whereAnd };
 
-    const records = await options.database.bank.findAll(
-      {
-        attributes: ['id', 'name'],
-        where,
-        limit: limit ? Number(limit) : undefined,
-        order: [['name', 'ASC']],
-      },
-    );
+    const records = await options.database.bank.findAll({
+      attributes: ["id", "name"],
+      where,
+      limit: limit ? Number(limit) : undefined,
+      order: [["name", "ASC"]],
+    });
 
     return records.map((record) => ({
       id: record.id,
@@ -396,7 +327,7 @@ class BankRepository {
     action,
     record,
     data,
-    options: IRepositoryOptions,
+    options: IRepositoryOptions
   ) {
     let values = {};
 
@@ -409,27 +340,25 @@ class BankRepository {
 
     await AuditLogRepository.log(
       {
-        entityName: 'bank',
+        entityName: "bank",
         entityId: record.id,
         action,
         values,
       },
-      options,
+      options
     );
   }
 
   static async _fillWithRelationsAndFilesForRows(
     rows,
-    options: IRepositoryOptions,
+    options: IRepositoryOptions
   ) {
     if (!rows) {
       return rows;
     }
 
     return Promise.all(
-      rows.map((record) =>
-        this._fillWithRelationsAndFiles(record, options),
-      ),
+      rows.map((record) => this._fillWithRelationsAndFiles(record, options))
     );
   }
 
@@ -440,14 +369,12 @@ class BankRepository {
 
     const output = record.get({ plain: true });
 
-    const transaction = SequelizeRepository.getTransaction(
-      options,
-    );
+    const transaction = SequelizeRepository.getTransaction(options);
 
     output.logo = await FileRepository.fillDownloadUrl(
       await record.getLogo({
         transaction,
-      }),
+      })
     );
 
     return output;

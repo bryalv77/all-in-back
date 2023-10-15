@@ -2,11 +2,11 @@
  * This module creates the Sequelize to the database and
  * exports all the models.
  */
-import fs from 'fs';
-import path from 'path';
-import Sequelize, { DataTypes } from 'sequelize';
-import { getConfig } from '../../config';
-const highlight = require('cli-highlight').highlight;
+import fs from "fs";
+import path from "path";
+import Sequelize, { DataTypes } from "sequelize";
+import { getConfig } from "../../config";
+const highlight = require("cli-highlight").highlight;
 
 const basename = path.basename(module.filename);
 
@@ -22,32 +22,43 @@ function models() {
       port: getConfig().DATABASE_PORT,
       dialect: getConfig().DATABASE_DIALECT,
       logging:
-        getConfig().DATABASE_LOGGING === 'true'
+        getConfig().DATABASE_LOGGING === "true"
           ? (log) =>
               console.log(
                 highlight(log, {
-                  language: 'sql',
+                  language: "sql",
                   ignoreIllegals: true,
-                }),
+                })
               )
           : false,
-    },
+      pool: {
+        max: 10,
+        min: 0,
+        acquire: 30000,
+        idle: 10000,
+      },
+      retry: {
+        match: [/Deadlock/i, Sequelize.ConnectionError], // Retry on connection errors
+        max: 3, // Maximum retry 3 times
+        backoffBase: 3000, // Initial backoff duration in ms. Default: 100,
+        backoffExponent: 1.5, // Exponent to increase backoff each try. Default: 1.1
+      },
+    }
   );
 
   fs.readdirSync(__dirname)
     .filter(function (file) {
       return (
-        file.indexOf('.') !== 0 &&
+        file.indexOf(".") !== 0 &&
         file !== basename &&
-        (file.slice(-3) === '.js' ||
-          file.slice(-3) === '.ts')
+        (file.slice(-3) === ".js" || file.slice(-3) === ".ts")
       );
     })
     .forEach(function (file) {
-      const model = require(path.join(
-        __dirname,
-        file,
-      )).default(sequelize, DataTypes);
+      const model = require(path.join(__dirname, file)).default(
+        sequelize,
+        DataTypes
+      );
       database[model.name] = model;
     });
 
